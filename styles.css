@@ -1,21 +1,25 @@
 @charset "UTF-8";
-/* رنگ‌های اصلی سایت؛ برای تغییر تم، مقدارهای این بخش را ویرایش کنید. */
-/* تصویر بنر از فایل banne.png خوانده می‌شود؛ با جایگزینی همان فایل، تصویر عوض می‌شود. */
+
 :root {
   color-scheme: light;
-  --ink: #30251f;
-  --muted: #7b6b60;
-  --paper: #fbf8f3;
-  --card: #fffdf9;
-  --line: #e9dfd3;
-  --rust: #CC0000;
-  --rust-dark: #9d5638;
-  --gold: #d9ad6b;
-  --header: #CC0000;
-  --footer: #CC0000;
-  --focus: #cb8b43;
-  --soft-accent: #f8eee0;
-  --shadow: 0 12px 35px rgba(61, 39, 25, 0.07);
+
+  /* =========================================================
+     🎨 جعبه ابزار رنگ‌ها
+     ========================================================= */
+  --header: #CC0000;       /* رنگ نوار بالای سایت (سربرگ) */
+  --footer: #CC0000;       /* رنگ نوار پایین سایت (پاورقی) */
+  --rust: #CC0000;         /* رنگ آیکون جستجو، زیرعنوان‌ها و المان‌های تأکیدی */
+  --rust-dark: #990000;    /* رنگ قیمت‌ها و دکمه‌های مهم */
+  --paper: #fbf8f3;        /* رنگ پس‌زمینه کل صفحه */
+  --card: #fffdf9;         /* رنگ پس‌زمینه کارت‌های منو */
+  --ink: #30251f;          /* رنگ متن اصلی و نام غذاها */
+  --muted: #7b6b60;        /* رنگ توضیحات فرعی و متن‌های کم‌رنگ */
+  --line: #e9dfd3;         /* رنگ خطوط کادرها و خط‌چین‌ها */
+  --soft-accent: #fdf2f2;  /* رنگ نوار عنوان هر بخش/دسته‌بندی منو */
+  --gold: #d9ad6b;         /* رنگ متن‌های طلایی و خاص */
+  --focus: #CC0000;        /* رنگ حاشیه هنگام کلیک روی کادر جستجو */
+  --shadow: 0 12px 35px rgba(0, 0, 0, 0.07); /* سایه کارت‌ها */
+
   font-family: "Vazirmatn", Tahoma, sans-serif;
   scroll-behavior: smooth;
 }
@@ -76,7 +80,7 @@ button, input {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(52, 37, 29, 0.97);
+  background: var(--header);
   color: #fff;
   transition: box-shadow 0.2s ease;
   padding-top: env(safe-area-inset-top, 0px);
@@ -110,12 +114,14 @@ button, input {
 .brand-name {
   font-weight: 700;
   letter-spacing: -0.2px;
+  color: #fff;
 }
 
 .header-menu-link {
   text-decoration: none;
-  color: #f2dfc4;
+  color: #fff;
   font-size: 0.92rem;
+  opacity: 0.9;
 }
 
 .hero {
@@ -124,14 +130,14 @@ button, input {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: #392a22;
+  background: var(--ink);
   color: #fff;
 }
 
 .hero-photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(36, 25, 19, 0.83), rgba(36, 25, 19, 0.57) 48%, rgba(36, 25, 19, 0.25)), url("banne.png") center 52%/cover no-repeat;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5) 48%, rgba(0, 0, 0, 0.2)), url("banne.png") center 52%/cover no-repeat;
 }
 
 .hero-content {
@@ -143,7 +149,7 @@ button, input {
 
 .eyebrow {
   margin: 0 0 9px;
-  color: #e7c798;
+  color: var(--gold);
   font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -235,10 +241,10 @@ main#main {
   align-items: center;
   gap: 9px;
   padding: 0 14px;
-  background: #fff;
+  background: var(--card);
   border: 1px solid var(--line);
   border-radius: 6px;
-  box-shadow: 0 3px 12px rgba(61, 39, 25, 0.035);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
 }
 
 .search-icon {
@@ -261,12 +267,12 @@ main#main {
 }
 
 .search-box:focus-within {
-  border-color: var(--rust);
-  box-shadow: 0 0 0 3px rgba(157, 86, 56, 0.13);
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.12);
 }
 
 .search-box input::placeholder {
-  color: #9b8c80;
+  color: var(--muted);
 }
 
 .clear-search {
@@ -280,7 +286,7 @@ main#main {
 .search-hint {
   display: block;
   margin: 5px 4px 0;
-  color: #897a70;
+  color: var(--muted);
   font-size: 0.77rem;
 }
 
@@ -293,9 +299,9 @@ main#main {
 .error-message {
   padding: 17px 20px;
   margin: 18px 0;
-  background: #fff0e9;
-  border-right: 4px solid #b45135;
-  color: #68301f;
+  background: #fff0f0;
+  border-right: 4px solid var(--rust);
+  color: var(--rust-dark);
   border-radius: 5px;
 }
 
@@ -325,18 +331,17 @@ main#main {
   align-items: center;
   gap: 12px;
   padding: 14px 19px;
-  background: linear-gradient(110deg, var(--soft-accent), #fffaf4);
+  background: linear-gradient(110deg, var(--soft-accent), var(--card));
   border-bottom: 1px solid var(--line);
 }
 
-/* تصاویر کوچک فقط کنار تیتر بخش‌ها */
 .section-image {
   width: 42px;
   height: 42px;
   flex: 0 0 42px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid #ead7bc;
+  border: 2px solid var(--line);
 }
 
 .section-heading h3 {
@@ -359,8 +364,8 @@ main#main {
   place-items: center;
   padding: 0 7px;
   border-radius: 20px;
-  background: #f0e8de;
-  color: #74523c;
+  background: var(--soft-accent);
+  color: var(--rust-dark);
   font-size: 0.76rem;
   font-weight: 600;
 }
@@ -378,7 +383,7 @@ main#main {
   justify-content: space-between;
   gap: 14px;
   padding: 9px 1px;
-  border-bottom: 1px dashed #e9dfd3;
+  border-bottom: 1px dashed var(--line);
 }
 
 .menu-item:last-child {
@@ -393,19 +398,19 @@ main#main {
   flex: 0 0 auto;
   color: var(--rust-dark);
   font-size: 0.88rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .price-missing {
   font-size: 0.78rem;
-  color: #998779;
+  color: var(--muted);
   font-weight: 400;
 }
 
 .empty-section {
   padding: 18px 2px;
-  color: #88796f;
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
@@ -430,14 +435,14 @@ main#main {
   position: relative;
   align-items: center;
   overflow: hidden;
-  background: #38271d;
+  background: var(--ink);
   color: #fff;
 }
 
 .ambience-image {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(35, 24, 18, 0.82), rgba(35, 24, 18, 0.35)), url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1800&q=80") center 52%/cover no-repeat;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.35)), url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1800&q=80") center 52%/cover no-repeat;
 }
 
 .ambience-copy {
@@ -448,7 +453,7 @@ main#main {
 }
 
 .ambience-kicker {
-  color: #e6c18b;
+  color: var(--gold);
   font-size: 0.86rem;
 }
 
@@ -460,7 +465,7 @@ main#main {
 
 .site-footer {
   background: var(--footer);
-  color: #f5eee5;
+  color: #ffffff;
   padding: 32px 22px calc(24px + env(safe-area-inset-bottom, 0px));
   margin-top: auto;
 }
@@ -488,7 +493,7 @@ main#main {
 
 .footer-brand p {
   margin: 1px 0 0;
-  color: #c7b9aa;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.83rem;
 }
 
@@ -505,34 +510,35 @@ main#main {
   align-items: center;
   gap: 8px;
   padding: 7px 14px;
-  border: 1px solid #907451;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   text-decoration: none;
   background: transparent;
-  color: #f7ead8;
+  color: #ffffff;
   cursor: pointer;
   font-size: 0.88rem;
 }
 
 .button:hover {
-  background: #49352a;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .button-map {
-  background: #9d5638;
-  border-color: #9d5638;
-  color: white;
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--rust-dark);
+  font-weight: 700;
 }
 
 .button-map:hover {
-  background: #85452f;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .share-status {
   grid-column: 1/-1;
   min-height: 1.2em;
   margin: 0;
-  color: #e7c798;
+  color: #fff;
   font-size: 0.83rem;
 }
 
@@ -541,8 +547,8 @@ main#main {
   justify-content: space-between;
   margin-top: 20px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.13);
-  color: #c3b5a8;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.78rem;
 }
 
