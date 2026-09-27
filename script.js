@@ -7,7 +7,7 @@
     { id: "fast-food", path: "data/فست فود.txt" },
     { id: "hot-drinks", path: "data/نوشیدنی گرم.txt" },
     { id: "cold-drinks", path: "data/نوشیدنی سرد.txt" },
-    { id: "bastani", path: "data/bastani.txt" },
+    { id: "bastani", path: "data/بستنی.txt" },
     { id: "pastry", path: "data/شیرینی.txt" }
   ];
   var searchInput = document.getElementById("menu-search");
