@@ -8,11 +8,11 @@
   --paper: #fbf8f3;
   --card: #fffdf9;
   --line: #e9dfd3;
-  --rust: #9d5638;
-  --rust-dark: #D32F2F;
+  --rust: #CC0000;
+  --rust-dark: #9d5638;
   --gold: #d9ad6b;
-  --header: #D32F2F;
-  --footer: #30231c;
+  --header: #CC0000;
+  --footer: #CC0000;
   --focus: #cb8b43;
   --soft-accent: #f8eee0;
   --shadow: 0 12px 35px rgba(61, 39, 25, 0.07);
