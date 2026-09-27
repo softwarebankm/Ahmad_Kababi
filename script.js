@@ -2,7 +2,7 @@
   "use strict";
 
   var sections = [
-    { id: "food", path: "data/غذاها.txt" },
+    { id: "food", path: "data/کباب و غذاهای سنتی.txt" },
     { id: "condiments", path: "data/چاشنی‌ها.txt" },
     { id: "breakfast", path: "data/صبحانه.txt" },
     { id: "drinks", path: "data/نوشیدنی‌ها.txt" }
