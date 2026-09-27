@@ -76,7 +76,7 @@ button, input {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(52, 37, 29, 0.97);
+  background: var(--header);
   color: #fff;
   transition: box-shadow 0.2s ease;
   padding-top: env(safe-area-inset-top, 0px);
