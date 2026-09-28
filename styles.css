@@ -689,3 +689,87 @@ main#main {
   color: #CC0000 !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
+
+/* --- استایل نوار افقی دسته‌بندی‌ها (دقیقاً هماهنگ با تم) --- */
+.category-nav-bar {
+  position: sticky;
+  top: 60px;
+  z-index: 95;
+  background: var(--paper, #fff8f5);
+  margin: 10px 0 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line, #f0dfd8);
+}
+
+.category-nav-inner {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 16px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* مخفی کردن اسکرول‌بار در فایرفاکس */
+}
+
+.category-nav-inner::-webkit-scrollbar {
+  display: none; /* مخفی کردن اسکرول‌بار در کروم و اج */
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  font-weight: bold;
+  color: var(--text, #3d1a1a);
+  background: #ffffff;
+  border: 1px solid var(--line, #e2c9be);
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0. {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 16px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* مخفی کردن اسکرول‌بار در فایرفاکس */
+}
+
+.category-nav-inner::-webkit-scrollbar {
+  display: none; /* مخفی کردن اسکرول‌بار در کروم و اج */
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  font-weight: bold;
+  color: var(--text, #3d1a1a);
+  background: #ffffff;
+  border: 1px solid var(--line, #e2c9be);
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.category-chip:active,
+.category-chip.active {
+  background: var(--accent, #9e1b1b) !important;
+  color: #ffffff !important;
+  border-color: var(--accent, #9e1b1b) !important;
+  transform: scale(0.96);
+}
