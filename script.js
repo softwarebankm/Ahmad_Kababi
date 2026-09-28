@@ -121,29 +121,45 @@
   updateHeader();
 
   document.getElementById("share-menu").addEventListener("click", function () {
-  var message = document.getElementById("share-status");
-  var cleanUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, "/") + window.location.search;
-  var shareData = { url: cleanUrl };
-  if (navigator.share) {
-    navigator.share(shareData).then(function () {
-      message.textContent = "منو با موفقیت به اشتراک گذاشته شد.";
-    }).catch(function (error) {
-      if (error.name !== "AbortError") copyLink();
-    });
-  } else {
-    copyLink();
-  }
-
-  function copyLink() {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(cleanUrl).then(function () {
-        message.textContent = "پیوند منو در کلیپ‌بورد کپی شد.";
-      }).catch(function () {
-        message.textContent = "امکان کپی خودکار نبود؛ نشانی صفحه را دستی کپی کنید.";
+    var message = document.getElementById("share-status");
+    var cleanUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, "/") + window.location.search;
+    var shareData = { url: cleanUrl };
+    if (navigator.share) {
+      navigator.share(shareData).then(function () {
+        message.textContent = "منو با موفقیت به اشتراک گذاشته شد.";
+      }).catch(function (error) {
+        if (error.name !== "AbortError") copyLink();
       });
     } else {
-      message.textContent = "برای اشتراک‌گذاری، نشانی این صفحه را کپی کنید.";
+      copyLink();
     }
-  }
-});
+
+    function copyLink() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(cleanUrl).then(function () {
+          message.textContent = "پیوند منو در کلیپ‌بورد کپی شد.";
+        }).catch(function () {
+          message.textContent = "امکان کپی خودکار نبود؛ نشانی صفحه را دستی کپی کنید.";
+        });
+      } else {
+        message.textContent = "برای اشتراک‌گذاری، نشانی این صفحه را کپی کنید.";
+      }
+    }
+  });
+
+  // اسکرول نرم چیپ‌های دسته‌بندی
+  var chips = document.querySelectorAll(".category-chip");
+  chips.forEach(function (chip) {
+    chip.addEventListener("click", function (event) {
+      var targetId = chip.getAttribute("href");
+      if (!targetId || !targetId.startsWith("#")) return;
+      var target = document.querySelector(targetId);
+      if (target) {
+        event.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        chips.forEach(function (c) { c.classList.remove("active"); });
+        chip.classList.add("active");
+      }
+    });
+  });
 })();
