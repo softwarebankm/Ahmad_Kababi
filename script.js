@@ -52,6 +52,7 @@
       });
       var list = document.getElementById("items-" + section.id);
       var sectionElement = document.querySelector('[data-section="' + section.id + '"]');
+      if (!sectionElement || !list) return;
       var count = sectionElement.querySelector(".section-count");
       list.replaceChildren();
       matched.forEach(function (item) { list.appendChild(renderItem(item)); });
@@ -61,9 +62,11 @@
         empty.textContent = query ? "موردی برای نمایش نیست." : "هنوز موردی ثبت نشده است.";
         list.appendChild(empty);
       }
-      count.textContent = String(matched.length).replace(/[0-9]/g, function (digit) {
-        return "۰۱۲۳۴۵۶۷۸۹"[Number(digit)];
-      });
+      if (count) {
+        count.textContent = String(matched.length).replace(/[0-9]/g, function (digit) {
+          return "۰۱۲۳۴۵۶۷۸۹"[Number(digit)];
+        });
+      }
       sectionElement.hidden = Boolean(query) && matched.length === 0;
       visibleTotal += matched.length;
     });
@@ -147,16 +150,32 @@
     }
   });
 
-  // اسکرول نرم چیپ‌های دسته‌بندی
+  // اسکرول هوشمند چیپ‌ها (با احتساب هدر ثابت و سازگار با id یا data-section)
   var chips = document.querySelectorAll(".category-chip");
   chips.forEach(function (chip) {
     chip.addEventListener("click", function (event) {
-      var targetId = chip.getAttribute("href");
-      if (!targetId || !targetId.startsWith("#")) return;
-      var target = document.querySelector(targetId);
+      var rawTarget = chip.getAttribute("href") || "";
+      var cleanId = rawTarget.replace(/^#/, "").trim();
+      if (!cleanId) return;
+
+      // ابتدا با id و در صورت نبود با data-section المان را پیدا می‌کند
+      var target = document.getElementById(cleanId) ||
+                   document.querySelector('[data-section="' + cleanId + '"]') ||
+                   document.querySelector("#section-" + cleanId);
+
       if (target) {
         event.preventDefault();
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        // محاسبه فاصله با کسر هدر چسبان تا بالای سکشن زیر هدر مخفی نشود
+        var headerOffset = (header ? header.offsetHeight : 0) + 70;
+        var elementPosition = target.getBoundingClientRect().top;
+        var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+
         chips.forEach(function (c) { c.classList.remove("active"); });
         chip.classList.add("active");
       }
