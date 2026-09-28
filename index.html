@@ -13,7 +13,8 @@
   <script src="script.js" defer></script>
   <!-- فایل‌های منو از پوشه data خوانده می‌شوند؛ برای ویرایش نام و قیمت، فایل‌های متنی را اصلاح کنید. -->
   <!-- Menu data loaded by script.js: data/صبحانه.txt، data/غذای سنتی.txt، data/فست فود.txt، data/نوشیدنی گرم.txt، data/نوشیدنی سرد.txt، data/بستنی.txt، data/شیرینی.txt -->
-    <!-- تنظیمات تبدیل به اپلیکیشن (PWA) -->
+  
+  <!-- تنظیمات تبدیل به اپلیکیشن (PWA) -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1a1a1a">
   
@@ -31,7 +32,7 @@
       <a class="brand" href="#top" aria-label="احمد کبابی، ابتدای صفحه">
         <span class="brand-name">احمد کبابی</span>
       </a>
-      <a class="header-menu-link" href="#main">منو <span aria-hidden="true">↓</span></a>
+      <a class="header-menu-link" href="#menu-sections">منو <span aria-hidden="true">↓</span></a>
     </div>
   </header>
 
@@ -40,9 +41,9 @@
     <section class="hero" id="top" aria-labelledby="hero-title">
       <div class="hero-photo" aria-hidden="true"></div>
       <div class="hero-content">
-        <p class="eyebrow">میزبان لحظات خوش شماهستیم</p>
+        <p class="eyebrow">میزبان لحظات خوش شما هستیم</p>
         <h1 id="hero-title">احمد کبابی</h1>
-        <p class="hero-copy">از یک فنجانی قهوه تا صبحانه‌ ای دل‌چسب</p>
+        <p class="hero-copy">از یک فنجان قهوه تا صبحانه‌ای دل‌چسب</p>
         <a class="hero-link" href="#menu-sections">مشاهده منو <span aria-hidden="true">←</span></a>
       </div>
       <span class="hero-note" aria-hidden="true">کافه رستوران احمد کبابی</span>
@@ -54,7 +55,7 @@
           <p class="eyebrow eyebrow-dark">به انتخاب شما</p>
           <h2 id="menu-title">منوی کافه رستوران</h2>
         </div>
-        <p class="menu-intro">طعمی اصیل و تجربه ای ماندگار</p>
+        <p class="menu-intro">طعمی اصیل و تجربه‌ای ماندگار</p>
       </div>
 
       <div class="menu-tools">
@@ -67,50 +68,149 @@
         <span id="search-hint" class="search-hint">برای نمایش دوباره‌ی همه‌ی موارد، جست‌وجو را پاک کنید.</span>
       </div>
 
+      <!-- نوار دسته‌بندی‌های تعاملی شبیه چای‌بار (چسبان و افقی) -->
+      <nav class="category-nav-bar" id="category-nav-bar" aria-label="دسته‌بندی‌های منو">
+        <div class="category-nav-inner">
+          <a href="#title-breakfast" class="category-chip active" data-target="breakfast">
+            <span class="chip-icon">🍳</span>
+            <span class="chip-text">صبحانه</span>
+          </a>
+          <a href="#title-traditional-food" class="category-chip" data-target="traditional-food">
+            <span class="chip-icon">🍢</span>
+            <span class="chip-text">غذای سنتی</span>
+          </a>
+          <a href="#title-fast-food" class="category-chip" data-target="fast-food">
+            <span class="chip-icon">🍔</span>
+            <span class="chip-text">فست‌فود</span>
+          </a>
+          <a href="#title-hot-drinks" class="category-chip" data-target="hot-drinks">
+            <span class="chip-icon">☕</span>
+            <span class="chip-text">نوشیدنی گرم</span>
+          </a>
+          <a href="#title-cold-drinks" class="category-chip" data-target="cold-drinks">
+            <span class="chip-icon">🍹</span>
+            <span class="chip-text">نوشیدنی سرد</span>
+          </a>
+          <a href="#title-bastani" class="category-chip" data-target="bastani">
+            <span class="chip-icon">🍦</span>
+            <span class="chip-text">بستنی</span>
+          </a>
+          <a href="#title-pastry" class="category-chip" data-target="pastry">
+            <span class="chip-icon">🍰</span>
+            <span class="chip-text">شیرینی</span>
+          </a>
+        </div>
+      </nav>
+
       <div id="menu-status" class="status-message" role="status" aria-live="polite">در حال بارگذاری منو...</div>
       <div id="menu-error" class="error-message" role="alert" hidden></div>
+      
       <div id="menu-sections-list" class="sections-grid">
         <section class="menu-section" data-section="breakfast" aria-labelledby="title-breakfast">
-          <div class="section-heading"><img class="section-image" src="sobhane.png" alt="" aria-hidden="true"><div><h3 id="title-breakfast">صبحانه</h3><p>شروعی پرانرژی</p></div><span class="section-count" aria-label="تعداد موارد">۰</span></div>
+          <div class="section-heading">
+            <img class="section-image" src="sobhane.png" alt="" aria-hidden="true">
+            <div>
+              <h3 id="title-breakfast">صبحانه</h3>
+              <p>شروعی پرانرژی</p>
+            </div>
+            <span class="section-count" aria-label="تعداد موارد">۰</span>
+          </div>
           <div class="item-list" id="items-breakfast"></div>
         </section>
+
         <section class="menu-section" data-section="traditional-food" aria-labelledby="title-traditional-food">
-          <div class="section-heading"><img class="section-image" src="ghaza.png" alt="" aria-hidden="true"><div><h3 id="title-traditional-food">غذای سنتی</h3><p>کباب‌ها و خوراک‌های اصیل ایرانی</p></div><span class="section-count" aria-label="تعداد موارد">۰</span></div>
+          <div class="section-heading">
+            <img class="section-image" src="ghaza.png" alt="" aria-hidden="true">
+            <div>
+              <h3 id="title-traditional-food">غذای سنتی</h3>
+              <p>کباب‌ها و خوراک‌های اصیل ایرانی</p>
+            </div>
+            <span class="section-count" aria-label="تعداد موارد">۰</span>
+          </div>
           <div class="item-list" id="items-traditional-food"></div>
         </section>
+
         <section class="menu-section" data-section="fast-food" aria-labelledby="title-fast-food">
-          <div class="section-heading"><img class="section-image" src="fastfood.png" alt="" aria-hidden="true"><div><h3 id="title-fast-food">فست فود</h3><p>برگر، ساندویچ و پیتزا</p></div><span class="section-count" aria-label="تعداد موارد">۰</span></div>
+          <div class="section-heading">
+            <img class="section-image" src="fastfood.png" alt="" aria-hidden="true">
+            <div>
+              <h3 id="title-fast-food">فست فود</h3>
+              <p>برگر، ساندویچ و پیتزا</p>
+            </div>
+            <span class="section-count" aria-label="تعداد موارد">۰</span>
+          </div>
           <div class="item-list" id="items-fast-food"></div>
         </section>
+
         <section class="menu-section" data-section="hot-drinks" aria-labelledby="title-hot-drinks">
-          <div class="section-heading"><img class="section-image" src="coffi.png" alt="" aria-hidden="true"><div><h3 id="title-hot-drinks">نوشیدنی گرم</h3><p>انواع چای، دمنوش و قهوه</p></div><span class="section-count" aria-label="تعداد موارد">۰</span></div>
+          <div class="section-heading">
+            <img class="section-image" src="coffi.png" alt="" aria-hidden="true">
+            <div>
+              <h3 id="title-hot-drinks">نوشیدنی گرم</h3>
+              <p>انواع چای، دمنوش و قهوه</p>
+            </div>
+            <span class="section-count" aria-label="تعداد موارد">۰</span>
+          </div>
           <div class="item-list" id="items-hot-drinks"></div>
         </section>
+
         <section class="menu-section" data-section="cold-drinks" aria-labelledby="title-cold-drinks">
-          <div class="section-heading"><img class="section-image" src="cool.png" alt="" aria-hidden="true"><div><h3 id="title-cold-drinks">نوشیدنی سرد</h3><p>شربت‌ها، آبمیوه طبیعی و موکتیل</p></div><span class="section-count" aria-label="تعداد موارد">۰</span></div>
+          <div class="section-heading">
+            <img class="section-image" src="cool.png" alt="" aria-hidden="true">
+            <div>
+              <h3 id="title-cold-drinks">نوشیدنی سرد</h3>
+              <p>شربت‌ها، آبمیوه طبیعی و موکتیل</p>
+            </div>
+            <span class="section-count" aria-label="تعداد موارد">۰</span>
+          </div>
           <div class="item-list" id="items-cold-drinks"></div>
         </section>
+
         <section class="menu-section" data-section="bastani" aria-labelledby="title-bastani">
-          <div class="section-heading"><img class="section-image" src="bastani.png" alt="" aria-hidden="true"><div><h3 id="title-bastani">بستنی</h3><p>بستنی سنتی، اسکوپ و شیک</p></div><span class="section-count" aria-label="تعداد موارد">۰</span></div>
+          <div class="section-heading">
+            <img class="section-image" src="bastani.png" alt="" aria-hidden="true">
+            <div>
+              <h3 id="title-bastani">بستنی</h3>
+              <p>بستنی سنتی، اسکوپ و شیک</p>
+            </div>
+            <span class="section-count" aria-label="تعداد موارد">۰</span>
+          </div>
           <div class="item-list" id="items-bastani"></div>
         </section>
+
         <section class="menu-section" data-section="pastry" aria-labelledby="title-pastry">
-          <div class="section-heading"><img class="section-image" src="shirini.png" alt="" aria-hidden="true"><div><h3 id="title-pastry">شیرینی</h3><p>شیرینی‌های روز، کیک و باقلوا</p></div><span class="section-count" aria-label="تعداد موارد">۰</span></div>
+          <div class="section-heading">
+            <img class="section-image" src="shirini.png" alt="" aria-hidden="true">
+            <div>
+              <h3 id="title-pastry">شیرینی</h3>
+              <p>شیرینی‌های روز، کیک و باقلوا</p>
+            </div>
+            <span class="section-count" aria-label="تعداد موارد">۰</span>
+          </div>
           <div class="item-list" id="items-pastry"></div>
         </section>
       </div>
+
       <p id="no-results" class="no-results" hidden>موردی با این عبارت پیدا نشد. <button type="button" id="reset-search">نمایش همه‌ی منو</button></p>
     </section>
 
     <section class="drink-ambience" aria-label="فضای دل‌نشین رستوران">
       <div class="ambience-image" role="img" aria-label="فنجان قهوه در فضایی گرم و دنج"></div>
-      <div class="ambience-copy"><span class="ambience-kicker">لحظه‌ای ماندگار برای شما</span><p>طعمی اصیل و خاطره‌انگیز</p></div>
+      <div class="ambience-copy">
+        <span class="ambience-kicker">لحظه‌ای ماندگار برای شما</span>
+        <p>طعمی اصیل و خاطره‌انگیز</p>
+      </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-brand"><div><strong>احمد کبابی</strong><p>خوشحالیم که انتخاب‌مان کردید</p></div></div>
+      <div class="footer-brand">
+        <div>
+          <strong>احمد کبابی</strong>
+          <p>خوشحالیم که انتخاب‌مان کردید</p>
+        </div>
+      </div>
       <div class="footer-actions">
         <!-- پیوند مسیریابی نشان؛ برای تغییر مقصد، نشانی این لینک را ویرایش کنید. -->
         <a class="button button-map" href="https://nshn.ir/QbfZP7PFYHu-" target="_blank" rel="noopener noreferrer">مسیر‌یابی <span aria-hidden="true">↗</span></a>
@@ -119,9 +219,9 @@
       <p id="share-status" class="share-status" role="status" aria-live="polite"></p>
     </div>
     <div class="footer-bottom">
-  <span class="developer-credit">توسعه و برنامه‌نویسی: <a href="https://mazanshop.com" target="_blank" rel="noopener noreferrer">mazanshop.com</a></span>
-  <a href="#top">بازگشت به بالا ↑</a>
-</div>
+      <span class="developer-credit">توسعه و برنامه‌نویسی: <a href="https://mazanshop.com" target="_blank" rel="noopener noreferrer">mazanshop.com</a></span>
+      <a href="#top">بازگشت به بالا ↑</a>
+    </div>
   </footer>
 </body>
 </html>
