@@ -290,66 +290,6 @@ main#main {
   font-size: 0.77rem;
 }
 
-/* =========================================================
-   🆕 استایل‌های جدید برای نوار دسته‌بندی (Category Chips)
-   ========================================================= */
-.category-nav-bar {
-  position: sticky;
-  top: 66px; /* هماهنگ با ارتفاع هدر */
-  z-index: 9;
-  background: var(--paper);
-  margin: 0 -22px 24px;
-  padding: 12px 22px;
-  overflow-x: auto;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-}
-
-.category-nav-bar::-webkit-scrollbar { display: none; }
-
-.category-list {
-  display: flex;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.category-chip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  text-decoration: none;
-  color: var(--ink);
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.25s ease;
-  cursor: pointer;
-}
-
-.category-chip:hover {
-  border-color: var(--rust);
-  background: #fff;
-}
-
-.category-chip.active {
-  background: var(--rust);
-  color: #fff;
-  border-color: var(--rust);
-}
-
-.chip-icon {
-  font-size: 1.1rem;
-}
-/* ========================================================= */
-
 .status-message {
   padding: 16px;
   text-align: center;
