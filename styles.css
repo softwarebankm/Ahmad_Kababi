@@ -702,9 +702,13 @@ main#main {
 }
 
 .category-nav-inner {
+  max-width: 1080px;
+  margin: 0 auto;
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
+  justify-content: center;
+  align-items: center;
   gap: 8px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -743,3 +747,9 @@ main#main {
   transform: scale(0.96);
 }
 
+/* در حالت موبایل: چیپ‌ها از لبه راست شروع می‌شوند تا اسکرول بدون بریدگی کار کند */
+@media (max-width: 680px) {
+  .category-nav-inner {
+    justify-content: flex-start !important;
+  }
+}
