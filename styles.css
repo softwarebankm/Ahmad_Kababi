@@ -762,11 +762,11 @@ main#main {
   right: 12px;
   max-width: 460px;
   margin: 0 auto;
-  background: #34251d;
+  background: #3a0d10; /* 👈 زرشکی تیره */
   color: #fbf8f3;
   border-radius: 14px;
   padding: 12px 14px;
-  box-shadow: 0 10px 25px rgba(52, 37, 29, 0.45);
+  box-shadow: 0 10px 25px rgba(58, 13, 16, 0.55);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -830,7 +830,7 @@ main#main {
 
 .pwa-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
@@ -838,7 +838,7 @@ main#main {
   border: none;
   outline: none;
   border-radius: 8px;
-  padding: 7px 14px;
+  padding: 7px 12px;
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
@@ -847,14 +847,14 @@ main#main {
 }
 
 .pwa-btn.install {
-  background: #9d5638;
+  background: #cc0000; /* 👈 قرمز زرشکی */
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(157, 86, 56, 0.5);
+  box-shadow: 0 2px 8px rgba(204, 0, 0, 0.4);
   border: 1px solid rgba(217, 173, 107, 0.4);
 }
 
 .pwa-btn.install:hover {
-  background: #743a28;
+  background: #a30000;
   transform: translateY(-1px);
 }
 
