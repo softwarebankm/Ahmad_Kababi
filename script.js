@@ -182,6 +182,7 @@
     });
   });
 })();
+
 // --- مدیریت نصب PWA احمد کبابی و سرویس‌ورکر ---
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -194,6 +195,7 @@ if ('serviceWorker' in navigator) {
 let deferredPrompt = null;
 const installBanner = document.getElementById('pwa-install-banner');
 const installBtn = document.getElementById('pwa-install-btn');
+const dismissBtn = document.getElementById('pwa-dismiss-btn');
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -213,6 +215,14 @@ if (installBtn) {
     }
     deferredPrompt = null;
     if (installBanner) installBanner.style.display = 'none';
+  });
+}
+
+if (dismissBtn) {
+  dismissBtn.addEventListener('click', () => {
+    if (installBanner) {
+      installBanner.style.display = 'none';
+    }
   });
 }
 
