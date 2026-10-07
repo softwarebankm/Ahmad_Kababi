@@ -805,7 +805,7 @@ main#main {
 .pwa-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   flex: 0 0 auto;
 }
 
