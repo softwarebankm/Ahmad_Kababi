@@ -754,21 +754,20 @@ main#main {
   }
 }
 
-/* --- استایل بنر اختصاصی نصب PWA احمد کبابی (تم زرشکی/طلایی) --- */
+/* --- بنر نصب تم زرشکی احمد کبابی --- */
 .pwa-banner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  background: linear-gradient(135deg, #1a1a1a, #2b1d1d);
-  border: 1px solid var(--gold, #d9ad6b);
+  background: linear-gradient(135deg, #1a1a1a, #2b1212);
+  border: 1px solid #CC0000;
   border-radius: 14px;
-  padding: 10px 14px;
+  padding: 9px 12px;
   margin: 12px 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   direction: rtl;
   font-family: inherit;
-  flex-wrap: wrap;
   animation: fadeInDown 0.4s ease;
 }
 
@@ -776,13 +775,12 @@ main#main {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1 1 auto;
   min-width: 0;
 }
 
 .pwa-icon {
   font-size: 20px;
-  background: rgba(217, 173, 107, 0.15);
+  background: rgba(204, 0, 0, 0.18);
   padding: 6px;
   border-radius: 10px;
   display: flex;
@@ -795,7 +793,7 @@ main#main {
   margin: 0;
   font-size: 13px;
   font-weight: 700;
-  color: var(--gold, #d9ad6b);
+  color: #fbbf24;
 }
 
 .pwa-text p {
@@ -813,7 +811,7 @@ main#main {
 
 .pwa-btn {
   border-radius: 20px;
-  padding: 7px 13px;
+  padding: 7px 14px;
   font-size: 12px;
   font-weight: bold;
   cursor: pointer;
@@ -845,23 +843,6 @@ main#main {
 .pwa-btn.dismiss:hover {
   background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
-}
-
-/* موبایل: دکمه‌ها زیر متن می‌رن تا هیچ‌وقت توو هم نرن */
-@media (max-width: 480px) {
-  .pwa-banner {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: right;
-  }
-  .pwa-content {
-    width: 100%;
-  }
-  .pwa-actions {
-    width: 100%;
-    justify-content: flex-start;
-    margin-top: 8px;
-  }
 }
 
 @keyframes fadeInDown {
