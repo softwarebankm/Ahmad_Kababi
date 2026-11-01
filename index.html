@@ -20,7 +20,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="احمد کبابی">
-  <link rel="apple-touch-icon" href="banner.webp">
+  <link rel="apple-touch-icon" href="icon.svg">
+
+  <!-- ═══════════════ استایل حالت بدون JavaScript ═══════════════ -->
+  <noscript>
+    <style>
+      #menu-status { display: none !important; }
+      .noscript-warning { display: block !important; }
+    </style>
+  </noscript>
 </head>
 <body>
 
@@ -80,6 +88,11 @@
 
     <!-- ═══════════════ بدنه منو ═══════════════ -->
     <section class="menu-wrap" id="menu-sections" aria-labelledby="menu-title">
+
+      <div class="noscript-warning" role="alert">
+        برای مشاهده‌ی منو، لطفاً JavaScript را در مرورگر خود فعال کنید.
+      </div>
+
       <div class="menu-heading">
         <div>
           <p class="eyebrow eyebrow-dark">به انتخاب شما</p>
@@ -100,6 +113,7 @@
       </div>
 
       <div id="menu-status" class="status-message" role="status" aria-live="polite">در حال بارگذاری منو...</div>
+      <div id="menu-warning" class="warning-message" role="status" aria-live="polite" hidden></div>
       <div id="menu-error" class="error-message" role="alert" hidden></div>
 
       <!-- ═══════════════ شبکه بخش‌های منو ═══════════════ -->
