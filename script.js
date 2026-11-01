@@ -1,6 +1,7 @@
 (function () {
   "use strict";
 
+  // ═══════════════ پیکربندی بخش‌ها ═══════════════
   var sections = [
     { id: "breakfast", path: "data/صبحانه.txt" },
     { id: "traditional-food", path: "data/غذای سنتی.txt" },
@@ -10,13 +11,16 @@
     { id: "bastani", path: "data/بستنی.txt" },
     { id: "pastry", path: "data/شیرینی.txt" }
   ];
+
   var searchInput = document.getElementById("menu-search");
   var clearButton = document.getElementById("clear-search");
   var status = document.getElementById("menu-status");
   var errorBox = document.getElementById("menu-error");
   var noResults = document.getElementById("no-results");
+  var header = document.getElementById("site-header");
   var allItems = [];
 
+  // ═══════════════ تجزیه فایل متنی منو ═══════════════
   function parseItems(text, sectionId) {
     return text.split(/\r?\n/).map(function (line) {
       var value = line.trim();
@@ -29,6 +33,7 @@
     }).filter(Boolean);
   }
 
+  // ═══════════════ ساخت المان آیتم منو ═══════════════
   function renderItem(item) {
     var row = document.createElement("div");
     row.className = "menu-item";
@@ -43,9 +48,18 @@
     return row;
   }
 
+  // ═══════════════ تبدیل ارقام به فارسی ═══════════════
+  function toPersianDigits(value) {
+    return String(value).replace(/[0-9]/g, function (d) {
+      return "۰۱۲۳۴۵۶۷۸۹"[Number(d)];
+    });
+  }
+
+  // ═══════════════ اعمال فیلتر جست‌وجو ═══════════════
   function applyFilter() {
     var query = searchInput.value.trim().toLocaleLowerCase();
     var visibleTotal = 0;
+
     sections.forEach(function (section) {
       var matched = allItems.filter(function (item) {
         return item.section === section.id && item.name.toLocaleLowerCase().indexOf(query) !== -1;
@@ -53,27 +67,29 @@
       var list = document.getElementById("items-" + section.id);
       var sectionElement = document.querySelector('[data-section="' + section.id + '"]');
       if (!sectionElement || !list) return;
-      var count = sectionElement.querySelector(".section-count");
+
+      var countValue = sectionElement.querySelector(".count-value");
       list.replaceChildren();
       matched.forEach(function (item) { list.appendChild(renderItem(item)); });
+
       if (!matched.length) {
         var empty = document.createElement("p");
         empty.className = "empty-section";
         empty.textContent = query ? "موردی برای نمایش نیست." : "هنوز موردی ثبت نشده است.";
         list.appendChild(empty);
       }
-      if (count) {
-        count.textContent = String(matched.length).replace(/[0-9]/g, function (digit) {
-          return "۰۱۲۳۴۵۶۷۸۹"[Number(digit)];
-        });
-      }
+
+      if (countValue) countValue.textContent = toPersianDigits(matched.length);
+
       sectionElement.hidden = Boolean(query) && matched.length === 0;
       visibleTotal += matched.length;
     });
+
     clearButton.hidden = !searchInput.value;
     noResults.hidden = !query || visibleTotal > 0;
   }
 
+  // ═══════════════ نمایش خطای بارگذاری ═══════════════
   function showLoadError() {
     status.hidden = true;
     errorBox.hidden = false;
@@ -81,52 +97,72 @@
     var title = document.createElement("strong");
     title.textContent = "بارگذاری منو انجام نشد.";
     var message = document.createElement("span");
-    message.textContent = "اگر فایل را با نشانی file:// باز کرده‌اید، مرورگر اجازه‌ی خواندن فایل‌های منو را نمی‌دهد. پوشه را با یک سرور محلی اجرا کنید (مثلاً دستور python -m http.server 8000) و سپس http://localhost:8000 را باز کنید. همچنین مطمئن شوید فایل‌های پوشه‌ی data کنار این صفحه هستند.";
+    message.textContent = "اگر فایل را با نشانی file:// باز کرده‌اید، مرورگر اجازه‌ی خواندن فایل‌های منو را نمی‌دهد. پوشه را با یک سرور محلی اجرا کنید (مثلاً python -m http.server 8000) و سپس http://localhost:8000 را باز کنید. همچنین مطمئن شوید فایل‌های پوشه‌ی data کنار این صفحه هستند.";
     errorBox.appendChild(title);
     errorBox.appendChild(message);
   }
 
-  // لود بدون کَش و با شناسه زمان یکتا
+  // ═══════════════ بارگذاری داده‌های منو ═══════════════
   Promise.all(sections.map(function (section) {
-    var noCacheUrl = encodeURI(section.path) + "?v=" + Date.now() + "_" + Math.random().toString(36).slice(2);
-    return fetch(noCacheUrl, {
-      cache: "no-store",
-      headers: {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0"
-      }
-    }).then(function (response) {
-      if (!response.ok) throw new Error("Could not load " + section.path);
-      return response.text();
-    }).then(function (text) { return parseItems(text, section.id); });
+    return fetch(encodeURI(section.path))
+      .then(function (response) {
+        if (!response.ok) throw new Error("Could not load " + section.path);
+        return response.text();
+      })
+      .then(function (text) { return parseItems(text, section.id); });
   })).then(function (groups) {
     allItems = groups.reduce(function (items, group) { return items.concat(group); }, []);
     status.hidden = true;
     applyFilter();
   }).catch(function () { showLoadError(); });
 
-  searchInput.addEventListener("input", applyFilter);
+  // ═══════════════ جست‌وجوی تعاملی (با debounce) ═══════════════
+  var searchTimer;
+  searchInput.addEventListener("input", function () {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(applyFilter, 150);
+  });
+
   clearButton.addEventListener("click", function () {
     searchInput.value = "";
     applyFilter();
     searchInput.focus();
   });
+
   document.getElementById("reset-search").addEventListener("click", function () {
     searchInput.value = "";
     applyFilter();
     searchInput.focus();
   });
 
-  var header = document.getElementById("site-header");
-  function updateHeader() { header.classList.toggle("is-compact", window.scrollY > 40); }
-  window.addEventListener("scroll", updateHeader, { passive: true });
+  // ═══════════════ هدر چسبان (با rAF) ═══════════════
+  var ticking = false;
+  function updateHeader() {
+    var compact = window.scrollY > 40;
+    header.classList.toggle("is-compact", compact);
+    document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
+    ticking = false;
+  }
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(updateHeader);
+      ticking = true;
+    }
+  }, { passive: true });
   updateHeader();
 
+  // ═══════════════ اشتراک‌گذاری منو ═══════════════
   document.getElementById("share-menu").addEventListener("click", function () {
     var message = document.getElementById("share-status");
+
+    if (window.location.protocol === "file:") {
+      message.textContent = "برای اشتراک‌گذاری، سایت را روی یک سرور اجرا کنید.";
+      return;
+    }
+
     var cleanUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, "/") + window.location.search;
     var shareData = { url: cleanUrl };
+
     if (navigator.share) {
       navigator.share(shareData).then(function () {
         message.textContent = "منو با موفقیت به اشتراک گذاشته شد.";
@@ -150,32 +186,24 @@
     }
   });
 
-  // اسکرول هوشمند چیپ‌ها (با احتساب هدر ثابت و سازگار با id یا data-section)
+  // ═══════════════ اسکرول هوشمند چیپ‌ها ═══════════════
   var chips = document.querySelectorAll(".category-chip");
+  var navBar = document.querySelector(".category-nav-bar");
+
   chips.forEach(function (chip) {
     chip.addEventListener("click", function (event) {
       var rawTarget = chip.getAttribute("href") || "";
       var cleanId = rawTarget.replace(/^#/, "").trim();
       if (!cleanId) return;
 
-      // ابتدا با id و در صورت نبود با data-section المان را پیدا می‌کند
       var target = document.getElementById(cleanId) ||
-                   document.querySelector('[data-section="' + cleanId + '"]') ||
-                   document.querySelector("#section-" + cleanId);
+                   document.querySelector('[data-section="' + cleanId + '"]');
 
       if (target) {
         event.preventDefault();
-
-        // محاسبه فاصله با کسر هدر چسبان تا بالای سکشن زیر هدر مخفی نشود
-        var headerOffset = (header ? header.offsetHeight : 0) + 70;
-        var elementPosition = target.getBoundingClientRect().top;
-        var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth"
-        });
-
+        var headerOffset = (header ? header.offsetHeight : 0) + (navBar ? navBar.offsetHeight : 0) + 12;
+        var offsetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
         chips.forEach(function (c) { c.classList.remove("active"); });
         chip.classList.add("active");
       }
@@ -183,50 +211,53 @@
   });
 })();
 
-// --- مدیریت نصب PWA احمد کبابی و سرویس‌ورکر ---
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch((err) => {
-      console.log('SW registration failed:', err);
+// ═══════════════ ثبت Service Worker ═══════════════
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js").catch(function (err) {
+      console.log("SW registration failed:", err);
     });
   });
 }
 
-let deferredPrompt = null;
-const installBanner = document.getElementById('pwa-install-banner');
-const installBtn = document.getElementById('pwa-install-btn');
-const dismissBtn = document.getElementById('pwa-dismiss-btn');
+// ═══════════════ مدیریت نصب PWA ═══════════════
+var deferredPrompt = null;
+var installBanner = document.getElementById("pwa-install-banner");
+var installBtn = document.getElementById("pwa-install-btn");
+var dismissBtn = document.getElementById("pwa-dismiss-btn");
 
-window.addEventListener('beforeinstallprompt', (e) => {
+if (localStorage.getItem("pwa-dismissed") && installBanner) {
+  installBanner.style.display = "none";
+}
+
+window.addEventListener("beforeinstallprompt", function (e) {
   e.preventDefault();
   deferredPrompt = e;
-  if (installBanner) {
-    installBanner.style.display = 'flex';
+  if (installBanner && !localStorage.getItem("pwa-dismissed")) {
+    installBanner.style.display = "flex";
   }
 });
 
 if (installBtn) {
-  installBtn.addEventListener('click', async () => {
+  installBtn.addEventListener("click", function () {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      console.log('PWA Installed');
-    }
-    deferredPrompt = null;
-    if (installBanner) installBanner.style.display = 'none';
+    deferredPrompt.userChoice.then(function (choice) {
+      if (choice.outcome === "accepted") console.log("PWA Installed");
+      deferredPrompt = null;
+      if (installBanner) installBanner.style.display = "none";
+    });
   });
 }
 
 if (dismissBtn) {
-  dismissBtn.addEventListener('click', () => {
-    if (installBanner) {
-      installBanner.style.display = 'none';
-    }
+  dismissBtn.addEventListener("click", function () {
+    if (installBanner) installBanner.style.display = "none";
+    localStorage.setItem("pwa-dismissed", "1");
   });
 }
 
-window.addEventListener('appinstalled', () => {
-  if (installBanner) installBanner.style.display = 'none';
+window.addEventListener("appinstalled", function () {
+  if (installBanner) installBanner.style.display = "none";
   deferredPrompt = null;
 });
