@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* ═══════════════════════════════════════════════════════════
-   🎨 متغیرها و تنظیمات پایه
+   🎨 متغیرها
    ═══════════════════════════════════════════════════════════ */
 :root {
   color-scheme: light;
@@ -333,6 +333,34 @@ main#main { flex: 1 0 auto; }
 }
 .error-message strong { display: block; margin-bottom: 3px; }
 
+.warning-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  margin: 0 0 18px;
+  background: #fff8e6;
+  border-right: 4px solid var(--gold);
+  color: #8a6a2a;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.retry-btn {
+  padding: 6px 14px;
+  background: var(--rust);
+  color: #fff;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.retry-btn:hover { background: var(--rust-dark); }
+
 /* ═══════════════════════════════════════════════════════════
    🗂️ شبکه بخش‌های منو
    ═══════════════════════════════════════════════════════════ */
@@ -349,7 +377,7 @@ main#main { flex: 1 0 auto; }
   border-radius: 7px;
   overflow: hidden;
   box-shadow: var(--shadow);
-  scroll-margin-top: calc(var(--header-h, 66px) + 20px);
+  scroll-margin-top: calc(var(--header-h, 66px) + 70px);
 }
 
 .section-heading {
@@ -442,6 +470,21 @@ main#main { flex: 1 0 auto; }
   font-weight: 700;
   cursor: pointer;
   text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🚫 حالت بدون JavaScript
+   ═══════════════════════════════════════════════════════════ */
+.noscript-warning {
+  display: none;
+  padding: 16px 20px;
+  margin: 0 0 24px;
+  background: #fff0f0;
+  border-right: 4px solid var(--rust);
+  color: var(--rust-dark);
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 600;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -585,7 +628,7 @@ main#main { flex: 1 0 auto; }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   📱 بنر نصب PWA (تم زرشکی)
+   📱 بنر نصب PWA
    ═══════════════════════════════════════════════════════════ */
 .pwa-banner {
   position: fixed;
@@ -705,12 +748,12 @@ main#main { flex: 1 0 auto; }
 [hidden] { display: none !important; }
 
 /* ═══════════════════════════════════════════════════════════
-   📱 واکنش‌گرایی (Responsive)
+   📱 واکنش‌گرایی
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 680px) {
   .hero { min-height: 365px; }
   .hero-content {
-    padding: calc(54px + env(safe-area-inset-top, 0px)) 22px 66px;
+    padding: 24px 22px 60px;
   }
   .hero-copy { max-width: 350px; font-size: 0.97rem; }
   .hero-note { display: none; }
