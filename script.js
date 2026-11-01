@@ -16,8 +16,11 @@
   var clearButton = document.getElementById("clear-search");
   var status = document.getElementById("menu-status");
   var errorBox = document.getElementById("menu-error");
+  var warningBox = document.getElementById("menu-warning");
   var noResults = document.getElementById("no-results");
   var header = document.getElementById("site-header");
+  var navBar = document.querySelector(".category-nav-bar");
+  var chips = document.querySelectorAll(".category-chip");
   var allItems = [];
 
   // ═══════════════ تجزیه فایل متنی منو ═══════════════
@@ -89,34 +92,80 @@
     noResults.hidden = !query || visibleTotal > 0;
   }
 
-  // ═══════════════ نمایش خطای بارگذاری ═══════════════
+  // ═══════════════ نمایش خطای کلی ═══════════════
   function showLoadError() {
     status.hidden = true;
     errorBox.hidden = false;
     errorBox.replaceChildren();
+
     var title = document.createElement("strong");
     title.textContent = "بارگذاری منو انجام نشد.";
+
     var message = document.createElement("span");
     message.textContent = "اگر فایل را با نشانی file:// باز کرده‌اید، مرورگر اجازه‌ی خواندن فایل‌های منو را نمی‌دهد. پوشه را با یک سرور محلی اجرا کنید (مثلاً python -m http.server 8000) و سپس http://localhost:8000 را باز کنید. همچنین مطمئن شوید فایل‌های پوشه‌ی data کنار این صفحه هستند.";
+
+    var retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "retry-btn";
+    retry.textContent = "تلاش دوباره";
+    retry.addEventListener("click", function () { window.location.reload(); });
+
     errorBox.appendChild(title);
     errorBox.appendChild(message);
+    errorBox.appendChild(retry);
   }
 
-  // ═══════════════ بارگذاری داده‌های منو ═══════════════
-  Promise.all(sections.map(function (section) {
+  // ═══════════════ نمایش هشدار بارگذاری ناقص ═══════════════
+  function showPartialWarning(failedCount) {
+    if (!warningBox) return;
+    warningBox.hidden = false;
+    warningBox.replaceChildren();
+    var text = document.createElement("span");
+    text.textContent = "⚠️ " + toPersianDigits(failedCount) + " بخش از منو بارگذاری نشد. سایر بخش‌ها به‌درستی نمایش داده شده‌اند.";
+    var retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "retry-btn";
+    retry.textContent = "تلاش دوباره";
+    retry.addEventListener("click", function () { window.location.reload(); });
+    warningBox.appendChild(text);
+    warningBox.appendChild(retry);
+  }
+
+  // ═══════════════ بارگذاری داده‌ها (مقاوم در برابر خطای جزئی) ═══════════════
+  Promise.allSettled(sections.map(function (section) {
     return fetch(encodeURI(section.path))
       .then(function (response) {
-        if (!response.ok) throw new Error("Could not load " + section.path);
+        if (!response.ok) throw new Error("HTTP " + response.status);
         return response.text();
       })
-      .then(function (text) { return parseItems(text, section.id); });
-  })).then(function (groups) {
-    allItems = groups.reduce(function (items, group) { return items.concat(group); }, []);
-    status.hidden = true;
-    applyFilter();
-  }).catch(function () { showLoadError(); });
+      .then(function (text) {
+        return { id: section.id, items: parseItems(text, section.id) };
+      });
+  })).then(function (results) {
+    var successful = results.filter(function (r) { return r.status === "fulfilled"; });
+    var failed = results.filter(function (r) { return r.status === "rejected"; });
 
-  // ═══════════════ جست‌وجوی تعاملی (با debounce) ═══════════════
+    status.hidden = true;
+
+    if (successful.length === 0) {
+      showLoadError();
+      return;
+    }
+
+    allItems = successful.reduce(function (items, r) {
+      return items.concat(r.value.items);
+    }, []);
+
+    applyFilter();
+
+    if (failed.length > 0) {
+      showPartialWarning(failed.length);
+    }
+  }).catch(function () {
+    showLoadError();
+  });
+
+  // ═══════════════ جست‌وجو با debounce ═══════════════
   var searchTimer;
   searchInput.addEventListener("input", function () {
     clearTimeout(searchTimer);
@@ -135,21 +184,28 @@
     searchInput.focus();
   });
 
-  // ═══════════════ هدر چسبان (با rAF) ═══════════════
-  var ticking = false;
-  function updateHeader() {
-    var compact = window.scrollY > 40;
-    header.classList.toggle("is-compact", compact);
+  // ═══════════════ همگام‌سازی ارتفاع هدر (ResizeObserver) ═══════════════
+  function syncHeaderHeight() {
     document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
-    ticking = false;
   }
+
+  var ticking = false;
   window.addEventListener("scroll", function () {
     if (!ticking) {
-      requestAnimationFrame(updateHeader);
+      requestAnimationFrame(function () {
+        header.classList.toggle("is-compact", window.scrollY > 40);
+        ticking = false;
+      });
       ticking = true;
     }
   }, { passive: true });
-  updateHeader();
+
+  if (window.ResizeObserver) {
+    new ResizeObserver(syncHeaderHeight).observe(header);
+  }
+  window.addEventListener("resize", syncHeaderHeight, { passive: true });
+  syncHeaderHeight();
+  header.classList.toggle("is-compact", window.scrollY > 40);
 
   // ═══════════════ اشتراک‌گذاری منو ═══════════════
   document.getElementById("share-menu").addEventListener("click", function () {
@@ -187,28 +243,52 @@
   });
 
   // ═══════════════ اسکرول هوشمند چیپ‌ها ═══════════════
-  var chips = document.querySelectorAll(".category-chip");
-  var navBar = document.querySelector(".category-nav-bar");
-
   chips.forEach(function (chip) {
     chip.addEventListener("click", function (event) {
-      var rawTarget = chip.getAttribute("href") || "";
-      var cleanId = rawTarget.replace(/^#/, "").trim();
+      var cleanId = (chip.getAttribute("href") || "").replace(/^#/, "").trim();
       if (!cleanId) return;
 
-      var target = document.getElementById(cleanId) ||
-                   document.querySelector('[data-section="' + cleanId + '"]');
+      var target = document.getElementById(cleanId);
+      if (!target) return;
 
-      if (target) {
-        event.preventDefault();
-        var headerOffset = (header ? header.offsetHeight : 0) + (navBar ? navBar.offsetHeight : 0) + 12;
-        var offsetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-        chips.forEach(function (c) { c.classList.remove("active"); });
-        chip.classList.add("active");
-      }
+      event.preventDefault();
+
+      var headerOffset = (header ? header.offsetHeight : 0) + (navBar ? navBar.offsetHeight : 0) + 12;
+      var offsetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      setActiveChip(cleanId);
     });
   });
+
+  // ═══════════════ چیپ فعال با اسکرول (IntersectionObserver) ═══════════════
+  function setActiveChip(id) {
+    chips.forEach(function (chip) {
+      var chipId = (chip.getAttribute("href") || "").replace(/^#/, "");
+      var isActive = chipId === id;
+      chip.classList.toggle("active", isActive);
+      if (isActive) chip.setAttribute("aria-current", "true");
+      else chip.removeAttribute("aria-current");
+    });
+  }
+
+  if ("IntersectionObserver" in window) {
+    var sectionObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.dataset.section || entry.target.id;
+          if (id) setActiveChip(id);
+        }
+      });
+    }, {
+      rootMargin: "-35% 0px -55% 0px",
+      threshold: 0
+    });
+
+    document.querySelectorAll(".menu-section").forEach(function (s) {
+      sectionObserver.observe(s);
+    });
+  }
 })();
 
 // ═══════════════ ثبت Service Worker ═══════════════
