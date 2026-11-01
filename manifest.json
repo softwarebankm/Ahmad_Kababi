@@ -2,23 +2,26 @@
   "name": "احمد کبابی",
   "short_name": "احمد کبابی",
   "description": "منوی آنلاین احمد کبابی",
+  "lang": "fa",
+  "dir": "rtl",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
+  "background_color": "#FDFBF7",
   "theme_color": "#CC0000",
   "icons": [
     {
       "src": "banner.webp",
       "sizes": "192x192",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "banner.webp",
       "sizes": "512x512",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
