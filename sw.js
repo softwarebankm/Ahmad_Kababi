@@ -1,5 +1,5 @@
 // ═══════════════ پیکربندی کش ═══════════════
-const CACHE_VERSION = "ahmad-kababi-v2";
+const CACHE_VERSION = "ahmad-kababi-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -7,6 +7,8 @@ const APP_SHELL = [
   "./script.js",
   "./manifest.json",
   "./banner.webp",
+  "./icon.svg",
+  "./icon-maskable.svg",
   "./sobhane.webp",
   "./ghaza.webp",
   "./fastfood.webp",
@@ -16,71 +18,89 @@ const APP_SHELL = [
   "./shirini.webp"
 ];
 
-// ═══════════════ نصب ═══════════════
-self.addEventListener("install", (event) => {
+// ═══════════════ نصب (بدون شکست اتمیک) ═══════════════
+self.addEventListener("install", function (event) {
   event.waitUntil(
     caches.open(CACHE_VERSION)
-      .then((cache) => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
+      .then(function (cache) {
+        return Promise.all(
+          APP_SHELL.map(function (url) {
+            return cache.add(url).catch(function (err) {
+              console.warn("Cache add failed:", url, err);
+            });
+          })
+        );
+      })
+      .then(function () { return self.skipWaiting(); })
   );
 });
 
 // ═══════════════ فعال‌سازی ═══════════════
-self.addEventListener("activate", (event) => {
+self.addEventListener("activate", function (event) {
   event.waitUntil(
     caches.keys()
-      .then((keys) =>
-        Promise.all(
-          keys.filter((key) => key !== CACHE_VERSION).map((key) => caches.delete(key))
-        )
-      )
-      .then(() => self.clients.claim())
+      .then(function (keys) {
+        return Promise.all(
+          keys.filter(function (key) { return key !== CACHE_VERSION; })
+              .map(function (key) { return caches.delete(key); })
+        );
+      })
+      .then(function () { return self.clients.claim(); })
   );
 });
 
 // ═══════════════ واکشی ═══════════════
-self.addEventListener("fetch", (event) => {
-  const request = event.request;
+self.addEventListener("fetch", function (event) {
+  var request = event.request;
   if (request.method !== "GET") return;
 
-  const url = new URL(request.url);
-  const isSameOrigin = url.origin === self.location.origin;
-  const isDataFile = url.pathname.includes("/data/");
+  var url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
 
-  // فایل‌های داده‌ی منو: شبکه اول، کش جایگزین
+  var isDataFile = url.pathname.indexOf("/data/") !== -1;
+
+  // ═══════════════ فایل‌های داده (شبکه اول) ═══════════════
   if (isDataFile) {
+    var cacheKey = url.origin + url.pathname;
+
     event.respondWith(
       fetch(request)
-        .then((response) => {
+        .then(function (response) {
           if (response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+            var copy = response.clone();
+            caches.open(CACHE_VERSION).then(function (cache) {
+              cache.put(cacheKey, copy);
+            });
           }
           return response;
         })
-        .catch(() =>
-          caches.match(request).then(
-            (cached) => cached || new Response("", { status: 503 })
-          )
-        )
+        .catch(function () {
+          return caches.match(cacheKey).then(function (cached) {
+            return cached || new Response("", { status: 503 });
+          });
+        })
     );
     return;
   }
 
-  // سایر منابع: کش اول، شبکه جایگزین
+  // ═══════════════ سایر منابع (کش اول) ═══════════════
   event.respondWith(
-    caches.match(request).then((cached) => {
+    caches.match(request).then(function (cached) {
       if (cached) return cached;
       return fetch(request)
-        .then((response) => {
-          if (isSameOrigin && response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+        .then(function (response) {
+          if (response.ok) {
+            var copy = response.clone();
+            caches.open(CACHE_VERSION).then(function (cache) {
+              cache.put(request, copy);
+            });
           }
           return response;
         })
-        .catch(() => {
-          if (request.mode === "navigate") return caches.match("./index.html");
+        .catch(function () {
+          if (request.mode === "navigate") {
+            return caches.match("./index.html");
+          }
           return new Response("", { status: 503 });
         });
     })
